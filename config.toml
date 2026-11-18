@@ -1,4 +1,0 @@
-# termux-packages revision used to build the community packages.
-# Keep it identical to the revision used for the matching TP release, otherwise
-# the versions of shared dependencies can differ between the two repositories.
-termux_packages_ref = "master"
