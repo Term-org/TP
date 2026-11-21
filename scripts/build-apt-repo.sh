@@ -102,7 +102,7 @@ for app in "${!app_arches[@]}"; do
 
     ( cd "$repo" && apt-ftparchive \
         -o APT::FTPArchive::Release::Origin="${TERM_REPO_ORIGIN:-Term}" \
-        -o APT::FTPArchive::Release::Label="${TERM_REPO_LABEL:-Term Packages}" \
+        -o APT::FTPArchive::Release::Label="Term Packages" \
         -o APT::FTPArchive::Release::Suite="stable" \
         -o APT::FTPArchive::Release::Codename="stable" \
         -o APT::FTPArchive::Release::Architectures="${arch_list[*]}" \
