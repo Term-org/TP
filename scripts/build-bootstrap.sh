@@ -99,6 +99,17 @@ echo "prefix: $actual_prefix"
 
 # ---------------------------------------------------------------- build
 
+step "Patching build-bootstraps.sh"
+bootstraps="$work/scripts/build-bootstraps.sh"
+[ -f "$bootstraps" ] || die "scripts/build-bootstraps.sh was not found in termux-packages"
+# bzip2 is a subpackage of libbz2, so "build-package.sh bzip2" fails with
+# "No package bzip2 found". Building libbz2 produces the bzip2 package too.
+sed -i 's/PACKAGES+=("bzip2")/PACKAGES+=("libbz2")/' "$bootstraps"
+if grep -q 'PACKAGES+=("bzip2")' "$bootstraps"; then
+    grep -n 'bzip2' "$bootstraps" || true
+    die "could not patch the bzip2 entry of build-bootstraps.sh; it changed upstream, pin TERMUX_PACKAGES_REF"
+fi
+
 step "Building bootstrap packages (this takes a while)"
 ( cd "$work" && ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures "$arch" ) 2>&1 | tee "$log"
 

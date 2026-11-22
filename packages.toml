@@ -1,4 +1,4 @@
 # Extra packages published to the apt repository in addition to the bootstrap set.
 # Every package is built from source for every app and architecture, so keep the
 # list small: the published site must stay below 900 MB.
-packages = ["git", "openssh", "wget", "tmux", "htop", "jq", "make", "bash-completion"]
+packages = ["git", "openssh", "wget", "tmux", "htop", "jq", "make", "bash-completion", "curl"]
