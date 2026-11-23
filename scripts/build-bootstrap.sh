@@ -110,8 +110,19 @@ if grep -q 'PACKAGES+=("bzip2")' "$bootstraps"; then
     die "could not patch the bzip2 entry of build-bootstraps.sh; it changed upstream, pin TERMUX_PACKAGES_REF"
 fi
 
+step "Preparing Docker workspace"
+
+# The Termux package-builder container runs as UID/GID 1000.
+# Give its builder user ownership of the bind-mounted workspace.
+sudo chown -R 1000:1000 "$work"
+
 step "Building bootstrap packages (this takes a while)"
-( cd "$work" && ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures "$arch" ) 2>&1 | tee "$log"
+(
+    cd "$work"
+    ./scripts/run-docker.sh \
+        ./scripts/build-bootstraps.sh \
+        --architectures "$arch"
+) 2>&1 | tee "$log"
 
 zip_src="$(find "$work" -maxdepth 2 -type f -name "bootstrap-$arch.zip" -print -quit)"
 [ -n "$zip_src" ] || die "the build did not produce bootstrap-$arch.zip (see $log)"
