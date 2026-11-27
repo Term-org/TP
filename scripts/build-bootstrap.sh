@@ -110,13 +110,10 @@ if grep -q 'PACKAGES+=("bzip2")' "$bootstraps"; then
     die "could not patch the bzip2 entry of build-bootstraps.sh; it changed upstream, pin TERMUX_PACKAGES_REF"
 fi
 
-step "Preparing Docker workspace"
-
-# The Termux package-builder container runs as UID/GID 1000.
-# Give its builder user ownership of the bind-mounted workspace.
-sudo chown -R 1000:1000 "$work"
-
 step "Preparing the builder container"
+# Whatever happened to the checkout before, it must belong to the runner user again, because this
+# script (and not the container) creates folders in it. The container gets its access below.
+sudo chown -R "$(id -u):$(id -g)" "$root/work" || die "could not take over the work folder"
 container="${CONTAINER_NAME:-termux-package-builder}"
 : > "$log"
 mkdir -p "$work/output"
